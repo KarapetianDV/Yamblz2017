@@ -31,6 +31,8 @@
             android:layout_height="match_parent"/>
 
         <android.support.design.widget.NavigationView
+            app:itemIconTint="@color/drawer_item"
+            app:itemTextColor="@color/drawer_item"
             android:id="@+id/main_activity_navigation_view"
             android:layout_width="240dp"
             android:layout_height="match_parent"
