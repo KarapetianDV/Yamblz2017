@@ -13,10 +13,7 @@ import android.view.ViewGroup;
 
 public class ContentFragment extends Fragment {
     public static ContentFragment newInstance() {
-        //Bundle args = new Bundle();
-        ContentFragment fragment = new ContentFragment();
-        //fragment.setArguments(args);
-        return fragment;
+        return new ContentFragment();
     }
 
     @Nullable
