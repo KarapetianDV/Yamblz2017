@@ -13,17 +13,17 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String SAVED_NAV_ACTION = "ru.overtired.yamblz2017.action";
 
-    private static final int CONTENT_FRAGMENT = 0;
+    private static final int WEATHER_FRAGMENT = 0;
     private static final int PREFERENCE_FRAGMENT = 1;
 
-    private static final String CONTENT_TAG = "content_fragment";
+    private static final String WEATHER_TAG = "content_fragment";
     private static final String PREFERENCE_TAG = "preference_fragment";
     private static final String ABOUT_TAG = "about_fragment";
 
     private int currentFragment; //0-Content, 1-Preferences, 2-About.
 
     private PreferenceFragment preferenceFragment;
-    private ContentFragment contentFragment;
+    private WeatherFragment weatherFragment;
     private AboutFragment aboutFragment;
 
     @Override
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_activity_navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        contentFragment = (ContentFragment) getSupportFragmentManager().findFragmentByTag(CONTENT_TAG);
-        if(contentFragment == null){
-            contentFragment = ContentFragment.newInstance();
+        weatherFragment = (WeatherFragment) getSupportFragmentManager().findFragmentByTag(WEATHER_TAG);
+        if(weatherFragment == null){
+            weatherFragment = WeatherFragment.newInstance();
         }
 
         preferenceFragment = (PreferenceFragment) getSupportFragmentManager().findFragmentByTag(PREFERENCE_TAG);
@@ -61,13 +61,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if(savedInstanceState!=null){
-            currentFragment = savedInstanceState.getInt(SAVED_NAV_ACTION,CONTENT_FRAGMENT);
+            currentFragment = savedInstanceState.getInt(SAVED_NAV_ACTION, WEATHER_FRAGMENT);
 
         }else {
-            currentFragment = CONTENT_FRAGMENT;
+            currentFragment = WEATHER_FRAGMENT;
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_activity_fragment_container, contentFragment, CONTENT_TAG)
+                    .add(R.id.main_activity_fragment_container, weatherFragment, WEATHER_TAG)
                     .commit();
 
             navigationView.getMenu().getItem(currentFragment).setChecked(true);
@@ -91,10 +91,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.main_activity_nav_content:
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_activity_fragment_container, contentFragment,CONTENT_TAG)
+                        .replace(R.id.main_activity_fragment_container, weatherFragment, WEATHER_TAG)
                         .commit();
                 //item.setChecked(true);
-                currentFragment = CONTENT_FRAGMENT;
+                currentFragment = WEATHER_FRAGMENT;
                 break;
 
             case R.id.main_activity_nav_settings:
