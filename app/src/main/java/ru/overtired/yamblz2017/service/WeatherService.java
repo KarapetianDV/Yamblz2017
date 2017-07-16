@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -18,8 +19,9 @@ import ru.overtired.yamblz2017.data.database.Dao;
  */
 
 public class WeatherService extends IntentService {
-    public static final String SERVICE_NAME = "ru.overtired.yamblz.weather_service";
+    public static final String SERVICE_NAME = "ru.overtired.yamblz2017.weather_service";
 
+    public static final String ACTION_UPDATE_WEATHER = "ru.overtired.yamblz2017.weather.update_weather";
 
     public WeatherService(){
         super(SERVICE_NAME);
@@ -54,7 +56,7 @@ public class WeatherService extends IntentService {
             Log.d("WHEATHER_RESPONSE", response);
 
             Dao.get(getApplicationContext()).addWeather(weather);
-
+            sendBroadcast(new Intent(ACTION_UPDATE_WEATHER));
         } catch (Exception e) {
             Log.d("WHEATHER_RESPONSE", "Exception:(");
             e.printStackTrace();

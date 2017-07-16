@@ -1,5 +1,9 @@
 package ru.overtired.yamblz2017.main_activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +46,13 @@ public class WeatherFragment extends Fragment {
 
     private AsyncFetcher fetcher;
 
+    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateWeather(false);
+            
+        }
+    };
 
     public static WeatherFragment newInstance() {
         return new WeatherFragment();
@@ -49,6 +61,20 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().startService(WeatherService.newIntent(getActivity().getApplicationContext()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(WeatherService.ACTION_UPDATE_WEATHER);
+        getActivity().registerReceiver(updateReceiver,filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(updateReceiver);
     }
 
     @Nullable
