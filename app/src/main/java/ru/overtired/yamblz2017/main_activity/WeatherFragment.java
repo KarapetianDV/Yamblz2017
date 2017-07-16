@@ -22,6 +22,9 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import ru.overtired.yamblz2017.R;
@@ -39,11 +42,13 @@ import ru.overtired.yamblz2017.service.WeatherService;
 public class WeatherFragment extends Fragment {
     public static final String TAG = "WeatherFragment";
 
-    private ImageView cardImage;
-    private TextView cardTemp;
-    private TextView cardFeelsTemp;
+    private Unbinder unbinder;
 
-    private SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.card_image) ImageView cardImage;
+    @BindView(R.id.card_temp) TextView cardTemp;
+    @BindView(R.id.card_feelslike_temp) TextView cardFeelsTemp;
+
+    @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
 
     private AsyncFetcher fetcher;
 
@@ -82,8 +87,8 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_activity_weather, container, false);
+        unbinder = ButterKnife.bind(this,view);
 
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -91,13 +96,15 @@ public class WeatherFragment extends Fragment {
             }
         });
 
-        cardImage = (ImageView) view.findViewById(R.id.card_image);
-        cardTemp = (TextView) view.findViewById(R.id.card_temp);
-        cardFeelsTemp = (TextView) view.findViewById(R.id.card_feelslike_temp);
-
         updateWeather(false);
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     private void updateWeather(boolean useNetwork) {

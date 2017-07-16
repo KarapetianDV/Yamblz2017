@@ -12,6 +12,8 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.service.WeatherRequestJob;
 
@@ -20,15 +22,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private WeatherFragment weatherFragment;
     private AboutFragment aboutFragment;
 
+    @BindView(R.id.main_activity_toolbar) Toolbar toolbar;
+    @BindView(R.id.main_activity_drawer_layout) DrawerLayout drawer;
+    @BindView(R.id.main_activity_navigation_view) NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_activity_drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.toggle_open_drawer, R.string.toggle_close_drawer);
@@ -36,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.main_activity_navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         weatherFragment = (WeatherFragment) getSupportFragmentManager()
@@ -81,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_activity_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -111,8 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             aboutFragment.show(getSupportFragmentManager(),AboutFragment.TAG);
         }
 
-        ((DrawerLayout) findViewById(R.id.main_activity_drawer_layout))
-                .closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(GravityCompat.START);
 
         return true;
     }
