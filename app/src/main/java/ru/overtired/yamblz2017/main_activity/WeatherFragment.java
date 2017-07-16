@@ -37,7 +37,8 @@ import ru.overtired.yamblz2017.service.WeatherService;
  */
 
 public class WeatherFragment extends Fragment {
-    private FloatingActionButton fab;
+    public static final String TAG = "WeatherFragment";
+
     private ImageView cardImage;
     private TextView cardTemp;
     private TextView cardFeelsTemp;
@@ -50,7 +51,7 @@ public class WeatherFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateWeather(false);
-            
+
         }
     };
 

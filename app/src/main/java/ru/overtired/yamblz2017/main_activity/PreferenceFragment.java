@@ -12,6 +12,8 @@ import ru.overtired.yamblz2017.service.WeatherRequestJob;
  */
 
 public class PreferenceFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static final String TAG = "PreferenceFragment";
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);

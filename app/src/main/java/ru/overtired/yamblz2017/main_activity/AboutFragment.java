@@ -15,6 +15,8 @@ import ru.overtired.yamblz2017.R;
  */
 
 public class AboutFragment extends DialogFragment {
+    public static final String TAG = "AboutFragment";
+
     @NonNull
     public static AboutFragment newInstance() {
         return new AboutFragment();
