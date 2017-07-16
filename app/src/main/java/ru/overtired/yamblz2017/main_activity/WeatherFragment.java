@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import ru.overtired.yamblz2017.R;
+import ru.overtired.yamblz2017.WeatherRequestJob;
 import ru.overtired.yamblz2017.data.ResponseProcesser;
 import ru.overtired.yamblz2017.data.Weather;
 import ru.overtired.yamblz2017.data.WeatherFetcher;
@@ -30,8 +31,8 @@ import ru.overtired.yamblz2017.data.database.Dao;
 public class WeatherFragment extends Fragment {
     private FloatingActionButton fab;
     private ImageView cardImage;
-    private TextView cardCity;
     private TextView cardTemp;
+    private TextView cardFeelsTemp;
 
     private SwipeRefreshLayout refreshLayout;
 
@@ -40,6 +41,12 @@ public class WeatherFragment extends Fragment {
 
     public static WeatherFragment newInstance() {
         return new WeatherFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        WeatherRequestJob.scheduleJob(true);
     }
 
     @Nullable
@@ -56,8 +63,8 @@ public class WeatherFragment extends Fragment {
         });
 
         cardImage = (ImageView) view.findViewById(R.id.card_image);
-        cardCity = (TextView) view.findViewById(R.id.card_city);
         cardTemp = (TextView) view.findViewById(R.id.card_temp);
+        cardFeelsTemp = (TextView) view.findViewById(R.id.card_feelslike_temp);
 
         updateWeather(false);
 
@@ -122,7 +129,7 @@ public class WeatherFragment extends Fragment {
     private void setWeather(Weather weather) {
         Picasso.with(getActivity()).load(weather.imageUrl).into(cardImage);
         cardTemp.setText(Double.toString(weather.tempCelsius));
-        cardCity.setText(weather.city);
+        cardFeelsTemp.setText(Double.toString(weather.feelsLikeCelsius));
     }
 
     private void loadNewWeather(){

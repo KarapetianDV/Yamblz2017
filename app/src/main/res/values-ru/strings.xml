@@ -9,4 +9,6 @@
     <string name="test_the_content">Содержимое</string>
     <string name="toggle_close_drawer">Открыть шторку</string>
     <string name="toggle_open_drawer">Закрыть шторку</string>
+    <string name="moscow">Москва</string>
+    <string name="feelslike">Ощущается как</string>
 </resources>

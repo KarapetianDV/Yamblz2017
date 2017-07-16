@@ -19,11 +19,11 @@
             app:layout_constraintLeft_toLeftOf="parent" />
 
         <TextView
-            android:layout_marginLeft="8dp"
             android:id="@+id/card_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CITY"
+            android:layout_marginLeft="8dp"
+            android:text="@string/moscow"
             android:textSize="36sp"
             app:layout_constraintLeft_toRightOf="@id/card_image"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,31 +32,30 @@
             android:id="@+id/card_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:text="32"
             android:textSize="36sp"
-            android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toRightOf="@id/card_city"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/card_feelslike"
-            app:layout_constraintTop_toBottomOf="@id/card_city"
-            android:layout_marginTop="8dp"
-            app:layout_constraintLeft_toRightOf="@id/card_image"
-            android:layout_marginLeft="8dp"
-            android:text="feelslike"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/feelslike"
+            app:layout_constraintLeft_toRightOf="@id/card_image"
+            app:layout_constraintTop_toBottomOf="@id/card_city" />
 
         <TextView
-            app:layout_constraintLeft_toRightOf="@id/card_feelslike"
-            app:layout_constraintTop_toBottomOf="@id/card_city"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
-            android:id="@+id/feelslike_temp"
-            android:text="-40"
+            android:id="@+id/card_feelslike_temp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toRightOf="@id/card_feelslike"
+            app:layout_constraintTop_toBottomOf="@id/card_city" />
 
     </android.support.constraint.ConstraintLayout>
 

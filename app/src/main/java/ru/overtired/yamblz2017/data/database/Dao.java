@@ -35,7 +35,6 @@ public class Dao {
         this.context = context;
     }
 
-
     public synchronized void addWeather(Weather weather) {
         SQLiteDatabase database = new DatabaseHelper(context).getWritableDatabase();
 
@@ -57,8 +56,8 @@ public class Dao {
         );
         WeatherCursorWrapper cursorWrapper = new WeatherCursorWrapper(cursor);
         if (cursorWrapper.getCount() > 0) {
-            cursorWrapper.moveToLast();
 
+            cursorWrapper.moveToLast();
             Weather weather = cursorWrapper.getWeather();
 
             return weather;

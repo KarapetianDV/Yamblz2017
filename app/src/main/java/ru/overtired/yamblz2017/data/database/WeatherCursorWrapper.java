@@ -3,6 +3,7 @@ package ru.overtired.yamblz2017.data.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import ru.overtired.yamblz2017.data.Weather;
 
@@ -37,13 +38,8 @@ public class WeatherCursorWrapper extends CursorWrapper {
 
         weather.imageUrl = getString(getColumnIndex(DatabaseScheme.WeatherTable.Cols.ICON_URL));
 
-        String dateText = getString(getColumnIndex(DatabaseScheme.WeatherTable.Cols.DATE));
+        weather.date = new Date(getLong(getColumnIndex(DatabaseScheme.WeatherTable.Cols.DATE)));
 
-        try {
-            weather.date = new SimpleDateFormat(Weather.DATE_FORMAT).parse(dateText);
-        }catch (Exception e){
-            //TODO: Exception
-        }
         return weather;
     }
 }

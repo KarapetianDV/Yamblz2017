@@ -2,6 +2,9 @@ package ru.overtired.yamblz2017;
 
 import android.app.Application;
 
+import com.evernote.android.job.JobManager;
+import com.facebook.stetho.Stetho;
+
 import ru.overtired.yamblz2017.data.database.Dao;
 
 /**
@@ -17,5 +20,12 @@ public class App extends Application {
 
     public void setDao(Dao dao){
         this.dao = dao;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Stetho.initializeWithDefaults(this);
+        JobManager.create(this).addJobCreator(new WeatherJobCreator());
     }
 }
