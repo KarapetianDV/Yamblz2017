@@ -27,7 +27,7 @@ public class WeatherRequestJob extends Job {
 
     public static void scheduleJob(long period){
         new JobRequest.Builder(TAG)
-                .setPeriodic(900000)
+                .setPeriodic(period)
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                 .setUpdateCurrent(true)
                 .build()

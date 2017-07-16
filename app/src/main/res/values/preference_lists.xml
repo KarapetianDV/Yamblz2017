@@ -11,7 +11,7 @@
         <item>@string/interval_entry_24_hours</item>
     </string-array>
 
-    <string name="interval_default">900000</string>
+    <string name="interval_default" translatable="false">900000</string>
     <string-array name="interval_values">
         <item>900000</item>
         <item>1800000</item>

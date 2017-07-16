@@ -50,16 +50,11 @@ public class WeatherService extends IntentService {
 
             Weather weather = ResponseProcesser.getWheatherFromJsonResponse(response);
 
-            Log.d("TEMP_IN_C:", weather.city);
-            Log.d("WHEATHER:", weather.weather);
-
-            Log.d("WHEATHER_RESPONSE", response);
-
             Dao.get(getApplicationContext()).addWeather(weather);
+
             sendBroadcast(new Intent(ACTION_UPDATE_WEATHER));
         } catch (Exception e) {
             Log.d("WHEATHER_RESPONSE", "Exception:(");
-            e.printStackTrace();
         }
     }
 }
