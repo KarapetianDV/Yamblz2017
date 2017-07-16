@@ -69,17 +69,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean autoupdate = preferences.getBoolean(getString(R.string.pref_key_autoupdate),true);
+        String firstStartKey = getString(R.string.pref_key_first_start);
+        boolean isFirstStart = preferences.getBoolean(firstStartKey,true);
 
-        if(autoupdate){
-            long period = Long.parseLong(preferences
-                    .getString(getString(R.string.pref_key_autoupdate_interval),
-                            getString(R.string.interval_default)));
-            WeatherRequestJob.scheduleJob(period);
-        }else {
-            WeatherRequestJob.unscheduleJob();
+        if(isFirstStart){
+            preferences.edit().putBoolean(firstStartKey,false).apply();
+
+            boolean autoupdate = preferences.getBoolean(getString(R.string.pref_key_autoupdate),true);
+
+            if(autoupdate){
+                long period = Long.parseLong(preferences
+                        .getString(getString(R.string.pref_key_autoupdate_interval),
+                                getString(R.string.interval_default)));
+                WeatherRequestJob.scheduleJob(period);
+            }else {
+                WeatherRequestJob.unscheduleJob();
+            }
         }
-
     }
 
     @Override

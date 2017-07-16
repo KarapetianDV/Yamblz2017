@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.sql.SQLDataException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -43,7 +44,7 @@ public class Dao {
         database.insert(DatabaseScheme.WeatherTable.NAME, null, contentValues);
     }
 
-    public synchronized Weather getLastWeather() {
+    public synchronized Weather getLastWeather() throws SQLDataException{
         SQLiteDatabase database = new DatabaseHelper(context).getReadableDatabase();
 
         Cursor cursor = database.query(DatabaseScheme.WeatherTable.NAME,
@@ -55,16 +56,16 @@ public class Dao {
                 DatabaseScheme.WeatherTable.Cols.DATE
         );
         WeatherCursorWrapper cursorWrapper = new WeatherCursorWrapper(cursor);
-        if (cursorWrapper.getCount() > 0) {
 
+        try {
+            if(cursorWrapper.getCount()==0){
+                throw new SQLDataException("No weather info to get");
+            }
             cursorWrapper.moveToLast();
-            Weather weather = cursorWrapper.getWeather();
-
-            return weather;
-        }else {
+            return cursorWrapper.getWeather();
+        }finally {
             cursorWrapper.close();
         }
-        return null;
     }
 
     private ContentValues getWeatherContentValues(Weather weather) {
@@ -81,6 +82,7 @@ public class Dao {
         contentValues.put(DatabaseScheme.WeatherTable.Cols.DEW_POINT_C, weather.dewPointCelsius);
         contentValues.put(DatabaseScheme.WeatherTable.Cols.DEW_POINT_F, weather.dewPointFarengate);
         contentValues.put(DatabaseScheme.WeatherTable.Cols.ICON_URL, weather.imageUrl);
+        contentValues.put(DatabaseScheme.WeatherTable.Cols.WEATHER, weather.weather);
 
         contentValues.put(DatabaseScheme.WeatherTable.Cols.DATE, weather.date.getTime());
 
