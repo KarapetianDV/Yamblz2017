@@ -1,9 +1,15 @@
-package ru.overtired.yamblz2017;
+package ru.overtired.yamblz2017.service;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.TimeUtils;
 
 import com.evernote.android.job.Job;
+import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
+
+import java.util.concurrent.TimeUnit;
+
+import ru.overtired.yamblz2017.service.WeatherService;
 
 /**
  * Created by overtired on 16.07.17.
@@ -19,12 +25,16 @@ public class WeatherRequestJob extends Job {
         return Result.SUCCESS;
     }
 
-    public static void scheduleJob(boolean isOn){
+    public static void scheduleJob(long period){
         new JobRequest.Builder(TAG)
                 .setPeriodic(900000)
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                 .setUpdateCurrent(true)
                 .build()
                 .schedule();
+    }
+
+    public static void unscheduleJob(){
+        JobManager.instance().cancelAllForTag(TAG);
     }
 }

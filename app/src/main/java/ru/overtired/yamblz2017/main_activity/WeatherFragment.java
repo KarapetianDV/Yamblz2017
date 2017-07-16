@@ -1,11 +1,13 @@
 package ru.overtired.yamblz2017.main_activity;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +20,12 @@ import com.squareup.picasso.Picasso;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import ru.overtired.yamblz2017.R;
-import ru.overtired.yamblz2017.WeatherRequestJob;
+import ru.overtired.yamblz2017.service.WeatherRequestJob;
 import ru.overtired.yamblz2017.data.ResponseProcesser;
 import ru.overtired.yamblz2017.data.Weather;
 import ru.overtired.yamblz2017.data.WeatherFetcher;
 import ru.overtired.yamblz2017.data.database.Dao;
+import ru.overtired.yamblz2017.service.WeatherService;
 
 /**
  * Created by overtired on 09.07.17.
@@ -46,7 +49,6 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        WeatherRequestJob.scheduleJob(true);
     }
 
     @Nullable

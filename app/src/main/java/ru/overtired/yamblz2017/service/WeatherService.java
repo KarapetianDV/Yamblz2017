@@ -1,11 +1,8 @@
-package ru.overtired.yamblz2017;
+package ru.overtired.yamblz2017.service;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -23,12 +20,13 @@ import ru.overtired.yamblz2017.data.database.Dao;
 public class WeatherService extends IntentService {
     public static final String SERVICE_NAME = "ru.overtired.yamblz.weather_service";
 
-    private WeatherService(){
+
+    public WeatherService(){
         super(SERVICE_NAME);
     }
 
     public static Intent newIntent(Context context){
-        Intent intent = new Intent(context,WeatherService.class);
+        Intent intent = new Intent(context, WeatherService.class);
         return intent;
     }
 

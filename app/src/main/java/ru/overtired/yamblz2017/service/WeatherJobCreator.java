@@ -1,7 +1,9 @@
-package ru.overtired.yamblz2017;
+package ru.overtired.yamblz2017.service;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
+
+import ru.overtired.yamblz2017.service.WeatherRequestJob;
 
 /**
  * Created by overtired on 16.07.17.

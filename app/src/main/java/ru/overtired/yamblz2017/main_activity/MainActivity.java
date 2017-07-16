@@ -1,5 +1,6 @@
 package ru.overtired.yamblz2017.main_activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -7,10 +8,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import ru.overtired.yamblz2017.R;
+import ru.overtired.yamblz2017.service.WeatherRequestJob;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String SAVED_NAV_ACTION = "ru.overtired.yamblz2017.action";
@@ -74,6 +77,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             navigationView.getMenu().getItem(currentFragment).setChecked(true);
         }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean autoupdate = preferences.getBoolean(getString(R.string.pref_key_autoupdate),true);
+
+        if(autoupdate){
+            long period = Long.parseLong(preferences
+                    .getString(getString(R.string.pref_key_autoupdate_interval),
+                            getString(R.string.interval_default)));
+            WeatherRequestJob.scheduleJob(period);
+        }else {
+            WeatherRequestJob.unscheduleJob();
+        }
+
     }
 
     @Override
