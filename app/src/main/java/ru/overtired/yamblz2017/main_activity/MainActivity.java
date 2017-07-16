@@ -1,4 +1,4 @@
-package ru.overtired.yamblz2017;
+package ru.overtired.yamblz2017.main_activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import ru.overtired.yamblz2017.R;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String SAVED_NAV_ACTION = "ru.overtired.yamblz2017.action";

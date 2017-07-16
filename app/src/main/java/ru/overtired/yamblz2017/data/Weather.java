@@ -2,16 +2,20 @@ package ru.overtired.yamblz2017.data;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * Created by overtired on 14.07.17.
  */
 
 public class Weather {
-    @SerializedName("city")
+    public static final String DATE_FORMAT = "EEE, d MMM yyyy hh:mm:ss Z";
+
     public String city;
+    public Date date;
 
     @SerializedName("weather")
-    public String wheather;
+    public String weather;
 
     @SerializedName("temp_c")
     public double tempCelsius;
@@ -32,7 +36,10 @@ public class Weather {
     public double windSpeedMph;
 
     @SerializedName("dewpoint_c")
-    public int dewPointCelsius;
+    public double dewPointCelsius;
     @SerializedName("dewpoint_f")
-    public int dewPointFarengate;
+    public double dewPointFarengate;
+
+    @SerializedName("icon_url")
+    public String imageUrl;
 }

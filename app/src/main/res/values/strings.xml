@@ -4,7 +4,7 @@
     <string name="app_about">This is an application which contains all home works of Yandex.Mobilization 2017 project.</string>
     <string name="app_about_title">About Yamblz2017</string>
 
-    <string name="action_content">Content</string>
+    <string name="action_weather">Weather</string>
     <string name="action_about">About</string>
     <string name="action_settings">Settings</string>
 

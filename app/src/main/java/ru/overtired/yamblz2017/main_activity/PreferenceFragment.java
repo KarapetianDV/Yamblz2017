@@ -1,7 +1,9 @@
-package ru.overtired.yamblz2017;
+package ru.overtired.yamblz2017.main_activity;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
+
+import ru.overtired.yamblz2017.R;
 
 /**
  * Created by overtired on 09.07.17.

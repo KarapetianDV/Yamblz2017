@@ -49,7 +49,7 @@
 -keep class sun.misc.Unsafe { *; }
 #-keep class com.google.gson.stream.** { *; }
 
-# Application classes that will be serialized/deserialized over Gson
+# App classes that will be serialized/deserialized over Gson
 -keep class com.google.gson.examples.android.model.** { *; }
 
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
@@ -66,6 +66,8 @@
 
 -ignorewarnings #:D
 
+
+-dontwarn com.squareup.okhttp.**
 -dontwarn okhttp3.**
 
 ### My clases ###

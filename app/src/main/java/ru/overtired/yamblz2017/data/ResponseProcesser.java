@@ -1,5 +1,8 @@
 package ru.overtired.yamblz2017.data;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -23,6 +26,19 @@ public class ResponseProcesser {
                 .getAsJsonObject()
                 .get("city")
                 .getAsString();
+
+        String dateText = mainPart.getAsJsonObject()
+                .get("local_time_rfc822")
+                .getAsString();
+
+        try {
+            weather.date = new SimpleDateFormat(Weather.DATE_FORMAT, Locale.ENGLISH)
+                    .parse(dateText);
+        }catch (Exception e){
+            //TODO:Exception
+            e.printStackTrace();
+        }
+
 
         return weather;
     }
