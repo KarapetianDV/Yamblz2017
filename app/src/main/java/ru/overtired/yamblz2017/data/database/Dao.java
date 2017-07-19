@@ -1,14 +1,9 @@
 package ru.overtired.yamblz2017.data.database;
 
-import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import java.sql.SQLDataException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 import ru.overtired.yamblz2017.App;
 import ru.overtired.yamblz2017.data.Weather;
@@ -44,7 +39,7 @@ public class Dao {
         database.insert(DatabaseScheme.WeatherTable.NAME, null, contentValues);
     }
 
-    public synchronized Weather getLastWeather() throws SQLDataException{
+    public synchronized Weather getLastWeather() {
         SQLiteDatabase database = new DatabaseHelper(context).getReadableDatabase();
 
         Cursor cursor = database.query(DatabaseScheme.WeatherTable.NAME,
@@ -57,14 +52,14 @@ public class Dao {
         );
         WeatherCursorWrapper cursorWrapper = new WeatherCursorWrapper(cursor);
 
-        try {
-            if(cursorWrapper.getCount()==0){
-                throw new SQLDataException("No weather info to get");
-            }
-            cursorWrapper.moveToLast();
-            return cursorWrapper.getWeather();
-        }finally {
+
+        if (cursorWrapper.getCount() == 0) {
             cursorWrapper.close();
+            return null;
+        } else {
+            cursorWrapper.moveToLast();
+            Weather weather = cursorWrapper.getWeather();
+            return weather;
         }
     }
 

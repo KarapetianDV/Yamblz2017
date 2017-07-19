@@ -1,0 +1,12 @@
+package ru.overtired.yamblz2017.main_activity;
+
+import ru.overtired.yamblz2017.data.Weather;
+
+/**
+ * Created by overtired on 18.07.17.
+ */
+
+public interface WeatherView {
+    void setWeather(Weather weather);
+    void hideProgress();
+}

@@ -44,8 +44,10 @@ import ru.overtired.yamblz2017.service.WeatherService;
  * Created by overtired on 09.07.17.
  */
 
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements  WeatherView{
     public static final String TAG = "WeatherFragment";
+
+    WeatherPresenter presenter;
 
     private Unbinder unbinder;
 
@@ -67,13 +69,10 @@ public class WeatherFragment extends Fragment {
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
 
-    private AsyncFetcher fetcher;
-
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateWeather(false);
-
+            presenter.onUpdateWeather();
         }
     };
 
@@ -84,11 +83,15 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new WeatherPresenterImpl(this,
+                new WeatherModelImpl(getActivity().getApplicationContext()));
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        presenter.onResume();//???
+
         IntentFilter filter = new IntentFilter(WeatherService.ACTION_UPDATE_WEATHER);
         getActivity().registerReceiver(updateReceiver, filter);
     }
@@ -108,11 +111,9 @@ public class WeatherFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadNewWeather();
+                presenter.onRefreshWeather();
             }
         });
-
-        updateWeather(false);
 
         return view;
     }
@@ -123,68 +124,10 @@ public class WeatherFragment extends Fragment {
         unbinder.unbind();
     }
 
-    private void updateWeather(boolean useNetwork) {
-        if (useNetwork) {
-            loadNewWeather();
-        } else {
-            try {
-                Weather weather = Dao.get(getActivity().getApplicationContext()).getLastWeather();
-                setWeather(weather);
-            } catch (SQLDataException e) {
-                loadNewWeather();
-            }
-        }
-    }
-
-    private class AsyncFetcher extends AsyncTask<String, Void, Weather> {
-
-        @Override
-        protected Weather doInBackground(String... params) {
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://api.wunderground.com/api/")
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .build();
-
-            WeatherFetcher fetcher = retrofit.create(WeatherFetcher.class);
-
-
-            try {
-                String response = fetcher.getWheather("7e79982c03e614a8", "RU", "Moscow")
-                        .execute()
-                        .body();
-
-                Weather weather = ResponseProcesser.getWheatherFromJsonResponse(response);
-
-                Log.d("TEMP_IN_C:", weather.city);
-                Log.d("WHEATHER:", weather.weather);
-
-                Log.d("WHEATHER_RESPONSE", response);
-
-                Dao.get(getActivity().getApplicationContext()).addWeather(weather);
-
-                return weather;
-            } catch (Exception e) {
-                Log.d("WHEATHER_RESPONSE", "Exception:(");
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Weather weather) {
-
-            if(weather!=null) {
-                setWeather(weather);
-            }else {
-                Toast.makeText(getActivity(),R.string.no_internet_error,Toast.LENGTH_SHORT).show();
-            }
-            refreshLayout.setRefreshing(false);
-        }
-    }
-
-    private void setWeather(Weather weather) {
-        Picasso.with(getActivity()).load(weather.imageUrl).into(cardImage);
+    @Override
+    public void setWeather(Weather weather) {
+        Picasso.with(getActivity().getApplicationContext())
+                .load(weather.imageUrl).into(cardImage);
         cardTemp.setText(Double.toString(weather.tempCelsius)+"°C ");
         cardFeelsTemp.setText(Double.toString(weather.feelsLikeCelsius)+"°C ");
         SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
@@ -194,11 +137,8 @@ public class WeatherFragment extends Fragment {
         cardWeather.setText(weather.weather);
     }
 
-    private void loadNewWeather() {
-        if (fetcher != null) {
-            fetcher.cancel(true);
-        }
-        fetcher = new AsyncFetcher();
-        fetcher.execute();
+    @Override
+    public void hideProgress() {
+        refreshLayout.setRefreshing(false);
     }
 }
