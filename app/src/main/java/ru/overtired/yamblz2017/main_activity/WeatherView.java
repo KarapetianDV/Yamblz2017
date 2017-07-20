@@ -7,6 +7,9 @@ import ru.overtired.yamblz2017.data.Weather;
  */
 
 public interface WeatherView {
+    enum MESSAGE{INTERNET_ERROR}
+
     void setWeather(Weather weather);
     void hideProgress();
+    void showMessage(MESSAGE message);
 }

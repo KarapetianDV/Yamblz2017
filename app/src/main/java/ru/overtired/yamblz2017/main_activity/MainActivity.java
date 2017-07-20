@@ -18,10 +18,6 @@ import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.service.WeatherRequestJob;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private PreferenceFragment preferenceFragment;
-    private WeatherFragment weatherFragment;
-    private AboutFragment aboutFragment;
-
     @BindView(R.id.main_activity_toolbar) Toolbar toolbar;
     @BindView(R.id.main_activity_drawer_layout) DrawerLayout drawer;
     @BindView(R.id.main_activity_navigation_view) NavigationView navigationView;
@@ -42,27 +38,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        weatherFragment = (WeatherFragment) getSupportFragmentManager()
-                .findFragmentByTag(WeatherFragment.TAG);
-        if(weatherFragment == null){
-            weatherFragment = WeatherFragment.newInstance();
-        }
-
-        preferenceFragment = (PreferenceFragment) getSupportFragmentManager()
-                .findFragmentByTag(PreferenceFragment.TAG);
-        if(preferenceFragment == null){
-            preferenceFragment = new PreferenceFragment();
-        }
-
-        aboutFragment = (AboutFragment) getSupportFragmentManager()
-                .findFragmentByTag(AboutFragment.TAG);
-        if(aboutFragment ==null){
-            aboutFragment = AboutFragment.newInstance();
-        }
-
         if(savedInstanceState==null){
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_activity_fragment_container, weatherFragment, WeatherFragment.TAG)
+                    .add(R.id.main_activity_fragment_container, WeatherFragment.newInstance(), WeatherFragment.TAG)
                     .commit();
 
             navigationView.getMenu().getItem(0).setChecked(true);
@@ -103,12 +81,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id) {
             case R.id.main_activity_nav_content:
+                WeatherFragment weatherFragment = (WeatherFragment) getSupportFragmentManager()
+                        .findFragmentByTag(WeatherFragment.TAG);
+                if(weatherFragment == null){
+                    weatherFragment = WeatherFragment.newInstance();
+                }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_activity_fragment_container, weatherFragment, WeatherFragment.TAG)
                         .commit();
                 break;
 
             case R.id.main_activity_nav_settings:
+                PreferenceFragment preferenceFragment = (PreferenceFragment) getSupportFragmentManager()
+                        .findFragmentByTag(PreferenceFragment.TAG);
+                if(preferenceFragment == null){
+                    preferenceFragment = new PreferenceFragment();
+                }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_activity_fragment_container, preferenceFragment,PreferenceFragment.TAG)
                         .commit();
@@ -116,6 +104,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if(id==R.id.main_activity_nav_about){
+            AboutFragment aboutFragment = (AboutFragment) getSupportFragmentManager()
+                    .findFragmentByTag(AboutFragment.TAG);
+            if(aboutFragment ==null){
+                aboutFragment = AboutFragment.newInstance();
+            }
             aboutFragment.show(getSupportFragmentManager(),AboutFragment.TAG);
         }
 

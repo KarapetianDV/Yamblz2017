@@ -7,6 +7,9 @@ import ru.overtired.yamblz2017.data.Weather;
  */
 
 public interface WeatherModel {
+    void setPresenter(WeatherPresenter presenter);
+    WeatherPresenter getPresenter();
     void addWeather(Weather weather);
     Weather getLastWeather();
+    void loadNewWeather();
 }

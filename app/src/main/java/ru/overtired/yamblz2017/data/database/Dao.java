@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import ru.overtired.yamblz2017.App;
 import ru.overtired.yamblz2017.data.Weather;
@@ -15,7 +17,8 @@ import ru.overtired.yamblz2017.data.Weather;
 public class Dao {
     private Context context;
 
-    public static Dao get(Context context) {
+    @NonNull
+    public static Dao get(@NonNull Context context) {
 
         App app = (App) context.getApplicationContext();
 
@@ -27,11 +30,12 @@ public class Dao {
         return app.getDao();
     }
 
-    private Dao(Context context) {
+
+    private Dao(@NonNull Context context) {
         this.context = context;
     }
 
-    public synchronized void addWeather(Weather weather) {
+    public synchronized void addWeather(@NonNull Weather weather) {
         SQLiteDatabase database = new DatabaseHelper(context).getWritableDatabase();
 
         ContentValues contentValues = getWeatherContentValues(weather);
@@ -39,6 +43,7 @@ public class Dao {
         database.insert(DatabaseScheme.WeatherTable.NAME, null, contentValues);
     }
 
+    @Nullable
     public synchronized Weather getLastWeather() {
         SQLiteDatabase database = new DatabaseHelper(context).getReadableDatabase();
 
@@ -63,7 +68,8 @@ public class Dao {
         }
     }
 
-    private ContentValues getWeatherContentValues(Weather weather) {
+    @NonNull
+    private ContentValues getWeatherContentValues(@NonNull Weather weather) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(DatabaseScheme.WeatherTable.Cols.CITY, weather.city);

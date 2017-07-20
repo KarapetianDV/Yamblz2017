@@ -8,5 +8,8 @@ public interface WeatherPresenter {
     void onRefreshWeather();
     void onUpdateWeather();
     void onResume();
-
+    void onDestroy();
+    void setView(WeatherView view);
+    void onWeatherLoaded();
+    void onWeatherLoadingError();
 }

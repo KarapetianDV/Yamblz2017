@@ -4,16 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,21 +17,14 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.sql.SQLDataException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 import ru.overtired.yamblz2017.R;
-import ru.overtired.yamblz2017.service.WeatherRequestJob;
-import ru.overtired.yamblz2017.data.ResponseProcesser;
 import ru.overtired.yamblz2017.data.Weather;
-import ru.overtired.yamblz2017.data.WeatherFetcher;
-import ru.overtired.yamblz2017.data.database.Dao;
 import ru.overtired.yamblz2017.service.WeatherService;
 
 /**
@@ -83,8 +70,28 @@ public class WeatherFragment extends Fragment implements  WeatherView{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new WeatherPresenterImpl(this,
-                new WeatherModelImpl(getActivity().getApplicationContext()));
+
+        HolderFragment<WeatherPresenter> holder = (HolderFragment<WeatherPresenter>)
+                getFragmentManager()
+                .findFragmentByTag(HolderFragment.TAG);
+        if(holder ==null){
+            holder = new HolderFragment<>();
+            getFragmentManager().beginTransaction()
+                    .add(holder,HolderFragment.TAG)
+                    .commit();
+        }
+
+        presenter = holder.getPresenter();
+        if(presenter==null){
+            presenter = new WeatherPresenterImpl(this,
+                    new WeatherModelImpl(getActivity().getApplicationContext()));
+            holder.setPresenter(presenter);
+        }else{
+            presenter.setView(this);
+        }
+
+
+
     }
 
     @Override
@@ -140,5 +147,14 @@ public class WeatherFragment extends Fragment implements  WeatherView{
     @Override
     public void hideProgress() {
         refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showMessage(MESSAGE message) {
+        String text = "";
+        switch (message){
+            case INTERNET_ERROR: text = getString(R.string.no_internet_error);
+        }
+        Toast.makeText(getActivity(),text,Toast.LENGTH_SHORT).show();
     }
 }

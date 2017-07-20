@@ -1,8 +1,10 @@
 package ru.overtired.yamblz2017;
 
 import android.app.Application;
+import android.os.Build;
 
-import com.evernote.android.job.JobManager;
+import com.evernote.android.job.*;
+import com.evernote.android.job.BuildConfig;
 import com.facebook.stetho.Stetho;
 
 import ru.overtired.yamblz2017.data.database.Dao;
@@ -26,7 +28,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Stetho.initializeWithDefaults(this);
         JobManager.create(this).addJobCreator(new WeatherJobCreator());
+
+        if(BuildConfig.DEBUG){
+            Stetho.initializeWithDefaults(this);
+        }
     }
 }
