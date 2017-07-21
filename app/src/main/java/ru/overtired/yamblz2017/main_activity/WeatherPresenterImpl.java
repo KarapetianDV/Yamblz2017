@@ -50,6 +50,7 @@ public class WeatherPresenterImpl implements WeatherPresenter {
     @Override
     public void onWeatherLoadingError() {
         view.showMessage(WeatherView.MESSAGE.INTERNET_ERROR);
+        view.hideProgress();
     }
 
     @Override

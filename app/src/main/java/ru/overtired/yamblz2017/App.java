@@ -1,11 +1,13 @@
 package ru.overtired.yamblz2017;
 
 import android.app.Application;
-import android.os.Build;
+import android.util.Log;
 
 import com.evernote.android.job.*;
 import com.evernote.android.job.BuildConfig;
 import com.facebook.stetho.Stetho;
+
+import java.util.Locale;
 
 import ru.overtired.yamblz2017.data.database.Dao;
 import ru.overtired.yamblz2017.service.WeatherJobCreator;
@@ -16,14 +18,7 @@ import ru.overtired.yamblz2017.service.WeatherJobCreator;
 
 public class App extends Application {
     private Dao dao;
-
-    public Dao getDao() {
-        return dao;
-    }
-
-    public void setDao(Dao dao){
-        this.dao = dao;
-    }
+    private String language;
 
     @Override
     public void onCreate() {
@@ -33,5 +28,19 @@ public class App extends Application {
         if(BuildConfig.DEBUG){
             Stetho.initializeWithDefaults(this);
         }
+
+        language = Locale.getDefault().getLanguage();
+        Log.d("Lang", language);
+    }
+
+    public String getLanguage(){
+        return language;
+    }
+
+    public Dao getDao() {
+        return dao;
+    }
+    public void setDao(Dao dao){
+        this.dao = dao;
     }
 }

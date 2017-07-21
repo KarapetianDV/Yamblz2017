@@ -89,15 +89,12 @@ public class WeatherFragment extends Fragment implements  WeatherView{
         }else{
             presenter.setView(this);
         }
-
-
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume();//???
+        presenter.onResume();
 
         IntentFilter filter = new IntentFilter(WeatherService.ACTION_UPDATE_WEATHER);
         getActivity().registerReceiver(updateReceiver, filter);

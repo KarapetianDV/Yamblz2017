@@ -4,15 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.IOException;
-import java.sql.SQLDataException;
-import java.text.ParseException;
-
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
+import ru.overtired.yamblz2017.App;
 import ru.overtired.yamblz2017.data.ResponseProcesser;
 import ru.overtired.yamblz2017.data.Weather;
-import ru.overtired.yamblz2017.data.WeatherFetcher;
 import ru.overtired.yamblz2017.data.database.Dao;
 
 /**
@@ -54,37 +48,24 @@ public class WeatherModelImpl implements WeatherModel {
         if (fetcher != null) {
             fetcher.cancel(true);
         }
+
+        App app = (App)context.getApplicationContext();
+
         fetcher = new AsyncFetcher();
-        fetcher.execute();//TODO: params
+        fetcher.execute(app.getLanguage());//TODO: params
     }
 
     class AsyncFetcher extends AsyncTask<String, Void, Weather> {
         @Override
         protected Weather doInBackground(String... params) {
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://api.wunderground.com/api/")
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .build();
-
-            WeatherFetcher fetcher = retrofit.create(WeatherFetcher.class);
-
             try {
-                String response = fetcher.getWheather("7e79982c03e614a8", "RU", "Moscow")
-                        .execute()
-                        .body();
-
-                Weather weather;
-                weather = ResponseProcesser.getWheatherFromJsonResponse(response);
+                Weather weather = ResponseProcesser.requestWeather(params[0],"Moscow");
                 addWeather(weather);
-                Log.d("WHEATHER_RESPONSE", response);
 
                 return weather;
             } catch (Exception e) {
-                Log.d("WHEATHER_RESPONSE", "Exception:(");
-                e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         @Override
