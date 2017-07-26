@@ -1,10 +1,12 @@
 package ru.overtired.yamblz2017.main_activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.preference.PreferenceManager;
 
 import ru.overtired.yamblz2017.App;
+import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.data.ResponseProcesser;
 import ru.overtired.yamblz2017.data.Weather;
 import ru.overtired.yamblz2017.data.database.Dao;
@@ -18,9 +20,11 @@ public class WeatherModelImpl implements WeatherModel {
 
     private Context context;
     AsyncFetcher fetcher;
+    private SharedPreferences sharedPreferences;
 
     public WeatherModelImpl(Context context) {
         this.context = context.getApplicationContext();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class WeatherModelImpl implements WeatherModel {
 
     @Override
     public Weather getLastWeather() {
-        String lang = ((App)context.getApplicationContext()).getLanguage();
+        String lang = App.getLanguage();
         return Dao.get(context).getLastWeather(lang);
     }
 
@@ -50,17 +54,19 @@ public class WeatherModelImpl implements WeatherModel {
             fetcher.cancel(true);
         }
 
-        App app = (App)context.getApplicationContext();
-
         fetcher = new AsyncFetcher();
-        fetcher.execute(app.getLanguage());//TODO: params
+        fetcher.execute(App.getLanguage());//TODO: params
     }
 
     class AsyncFetcher extends AsyncTask<String, Void, Weather> {
         @Override
         protected Weather doInBackground(String... params) {
             try {
-                Weather weather = ResponseProcesser.requestWeather(params[0],"Moscow");
+                Weather weather = ResponseProcesser.requestWeather(params[0],
+                        sharedPreferences.getString(
+                                context.getString(R.string.pref_key_select_city),
+                                context.getString(R.string.moscow)
+                        ));
                 addWeather(weather);
 
                 return weather;
