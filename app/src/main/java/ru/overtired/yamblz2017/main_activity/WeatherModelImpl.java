@@ -44,7 +44,7 @@ public class WeatherModelImpl implements WeatherModel {
 
     @Override
     public Weather getLastWeather() {
-        String lang = App.getLanguage();
+        String lang = ((App)context.getApplicationContext()).getLanguage();
         return Dao.get(context).getLastWeather(lang);
     }
 
@@ -54,8 +54,10 @@ public class WeatherModelImpl implements WeatherModel {
             fetcher.cancel(true);
         }
 
+        App app = (App)context.getApplicationContext();
+
         fetcher = new AsyncFetcher();
-        fetcher.execute(App.getLanguage());//TODO: params
+        fetcher.execute(app.getLanguage());//TODO: params
     }
 
     class AsyncFetcher extends AsyncTask<String, Void, Weather> {

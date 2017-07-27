@@ -6,6 +6,7 @@
     tools:context="ru.overtired.yamblz2017.main_activity.SelectCityFragment">
 
     <EditText
+        android:maxLines="1"
         android:id="@+id/enter_city_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

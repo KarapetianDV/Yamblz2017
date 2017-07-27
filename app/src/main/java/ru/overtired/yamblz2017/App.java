@@ -18,7 +18,7 @@ import ru.overtired.yamblz2017.service.WeatherJobCreator;
 
 public class App extends Application {
     private Dao dao;
-    private static String language;
+    private String language;
 
     @Override
     public void onCreate() {
@@ -33,7 +33,7 @@ public class App extends Application {
         Log.d("Lang", language);
     }
 
-    public static String getLanguage(){
+    public String getLanguage(){
         return language;
     }
 
