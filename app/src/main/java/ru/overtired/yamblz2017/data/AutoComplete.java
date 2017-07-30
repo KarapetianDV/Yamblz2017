@@ -9,13 +9,13 @@ public class AutoComplete {
 
     @SerializedName("RESULTS")
     @Expose
-    private List<RESULT> rESULTS = null;
+    private List<Result> rESULTS = null;
 
-    public List<RESULT> getRESULTS() {
+    public List<Result> getRESULTS() {
         return rESULTS;
     }
 
-    public void setRESULTS(List<RESULT> rESULTS) {
+    public void setRESULTS(List<Result> rESULTS) {
         this.rESULTS = rESULTS;
     }
 

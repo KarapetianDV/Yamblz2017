@@ -4,7 +4,7 @@ package ru.overtired.yamblz2017.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RESULT {
+public class Result {
 
     @SerializedName("name")
     @Expose
@@ -12,18 +12,9 @@ public class RESULT {
     @SerializedName("type")
     @Expose
     private String type;
-    @SerializedName("c")
+    @SerializedName("country")
     @Expose
-    private String c;
-    @SerializedName("zmw")
-    @Expose
-    private String zmw;
-    @SerializedName("tz")
-    @Expose
-    private String tz;
-    @SerializedName("tzs")
-    @Expose
-    private String tzs;
+    private String country;
     @SerializedName("l")
     @Expose
     private String l;
@@ -53,36 +44,12 @@ public class RESULT {
         this.type = type;
     }
 
-    public String getC() {
-        return c;
+    public String getCountry() {
+        return country;
     }
 
-    public void setC(String c) {
-        this.c = c;
-    }
-
-    public String getZmw() {
-        return zmw;
-    }
-
-    public void setZmw(String zmw) {
-        this.zmw = zmw;
-    }
-
-    public String getTz() {
-        return tz;
-    }
-
-    public void setTz(String tz) {
-        this.tz = tz;
-    }
-
-    public String getTzs() {
-        return tzs;
-    }
-
-    public void setTzs(String tzs) {
-        this.tzs = tzs;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getL() {
