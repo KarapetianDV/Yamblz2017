@@ -28,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.data.AutoComplete;
-import ru.overtired.yamblz2017.data.RESULT;
+import ru.overtired.yamblz2017.data.Result;
 import ru.overtired.yamblz2017.data.ResponseProcesser;
 
 public class SelectCityFragment extends DialogFragment {
@@ -86,7 +86,7 @@ public class SelectCityFragment extends DialogFragment {
                 @Override
                 public void onResponse(Call<AutoComplete> call, Response<AutoComplete> response) {
                     listAdapter.clear();
-                    for(RESULT result : response.body().getRESULTS()) {
+                    for(Result result : response.body().getRESULTS()) {
                         listAdapter.add(result.getName());
                     }
                     suggestionsListView.setAdapter(listAdapter);
