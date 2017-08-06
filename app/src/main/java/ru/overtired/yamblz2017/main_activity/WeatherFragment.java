@@ -10,30 +10,30 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import ru.overtired.yamblz2017.ForecastAdapter;
 import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.data.Weather;
+import ru.overtired.yamblz2017.data.forecastApi.ForecastDay;
 import ru.overtired.yamblz2017.service.WeatherService;
 
 /**
  * Created by overtired on 09.07.17.
  */
 
-public class WeatherFragment extends Fragment implements  WeatherView{
+public class WeatherFragment extends Fragment implements WeatherView{
     public static final String TAG = "WeatherFragment";
 
     WeatherPresenter presenter;
@@ -42,30 +42,18 @@ public class WeatherFragment extends Fragment implements  WeatherView{
 
     private SharedPreferences sharedPreferences;
 
-    @BindView(R.id.card_time)
-    TextView cardTime;
-    @BindView(R.id.card_image)
-    ImageView cardImage;
-    @BindView(R.id.card_temp)
-    TextView cardTemp;
-    @BindView(R.id.card_feelslike_temp)
-    TextView cardFeelsTemp;
-    @BindView(R.id.card_humidity)
-    TextView cardHumidity;
-    @BindView(R.id.card_windspeed)
-    TextView cardWindSpeed;
-    @BindView(R.id.card_weather)
-    TextView cardWeather;
-    @BindView(R.id.card_city)
-    TextView cardCity;
-
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
+
+    @BindView(R.id.forecast_recyclerview)
+    RecyclerView forecastRecyclerView;
+
+    ForecastAdapter adapter = new ForecastAdapter();
 
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            presenter.onUpdateWeather();
+            presenter.loadForecast();
         }
     };
 
@@ -127,9 +115,12 @@ public class WeatherFragment extends Fragment implements  WeatherView{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.onRefreshWeather();
+                presenter.loadForecast();
             }
         });
+
+        forecastRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        presenter.loadForecast();
 
         return view;
     }
@@ -142,18 +133,7 @@ public class WeatherFragment extends Fragment implements  WeatherView{
 
     @Override
     public void setWeather(Weather weather) {
-        Picasso.with(getActivity().getApplicationContext())
-                .load(weather.imageUrl).into(cardImage);
-        cardTemp.setText(Double.toString(weather.tempCelsius)+"°C ");
-        cardFeelsTemp.setText(Double.toString(weather.feelsLikeCelsius)+"°C ");
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-        cardTime.setText(format.format(weather.date));
-        cardHumidity.setText(weather.humidity);
-        cardWindSpeed.setText(weather.windSpeedKph+" "+getString(R.string.kph));
-        cardWeather.setText(weather.weather);
-        cardCity.setText(
-                sharedPreferences.getString(getString(R.string.pref_key_select_city),
-                getString(R.string.moscow)));
+        // Empty method
     }
 
     @Override
@@ -168,5 +148,12 @@ public class WeatherFragment extends Fragment implements  WeatherView{
             case INTERNET_ERROR: text = getString(R.string.no_internet_error);
         }
         Toast.makeText(getActivity(),text,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setRecyclerList(List<ForecastDay> forecastDays) {
+        Log.d(TAG, "setRecyclerList: " + forecastDays);
+        adapter = new ForecastAdapter(forecastDays);
+        forecastRecyclerView.setAdapter(adapter);
     }
 }

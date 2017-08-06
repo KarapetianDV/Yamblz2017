@@ -17,6 +17,9 @@ import ru.overtired.yamblz2017.service.WeatherJobCreator;
  */
 
 public class App extends Application {
+
+    private static final String API_WEATHER = "7e79982c03e614a8";
+
     private Dao dao;
     private String language;
 
@@ -42,5 +45,9 @@ public class App extends Application {
     }
     public void setDao(Dao dao){
         this.dao = dao;
+    }
+
+    public static String getApiWeather() {
+        return API_WEATHER;
     }
 }

@@ -15,13 +15,14 @@ import java.util.Locale;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import ru.overtired.yamblz2017.App;
 
 /**
  * Created by overtired on 15.07.17.
  */
 
 public class ResponseProcesser {
-    private static final String API_WEATHER = "7e79982c03e614a8";
+
 
     @Nullable
     public static Weather requestWeather(@NonNull String lang, @NonNull String city) {
@@ -34,7 +35,7 @@ public class ResponseProcesser {
 
         String jsonResponse;
         try {
-             jsonResponse = fetcher.getWheather(API_WEATHER, lang, city)
+             jsonResponse = fetcher.getWheather(App.getApiWeather(), lang, city)
                     .execute()
                     .body();
         }catch (IOException e){
