@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     app:cardElevation="4dp">
 
     <android.support.constraint.ConstraintLayout
@@ -21,46 +22,31 @@
             android:id="@+id/card_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="0dp"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="0dp" />
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <TextView
             android:id="@+id/card_temp"
             style="@style/Temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/card_image"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/card_image"
             android:layout_marginLeft="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="0dp" />
+            app:layout_constraintLeft_toLeftOf="@+id/card_image"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="@+id/card_image" />
 
         <TextView
             android:id="@+id/card_weather"
             style="@style/Temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/card_temp"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/card_temp" />
-
-        <TextView
-            android:id="@+id/card_feelslike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/feelslike"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/card_temp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/card_city"
             app:layout_constraintLeft_toRightOf="@+id/card_image"
-            android:layout_marginLeft="8dp" />
-
-        <TextView
-            android:id="@+id/card_feelslike_temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/card_feelslike"
-            app:layout_constraintLeft_toRightOf="@+id/card_feelslike"
             android:layout_marginLeft="8dp" />
 
         <TextView
@@ -68,45 +54,52 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/humidity"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/card_image"
+            app:layout_constraintLeft_toRightOf="@+id/card_image"
             android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/card_temp" />
 
         <TextView
-            android:id="@+id/card_humidity_text"
+            android:id="@+id/card_humidity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBaselineOf="@+id/card_humidity_title"
             app:layout_constraintLeft_toRightOf="@+id/card_humidity_title"
-            android:layout_marginLeft="0dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/card_humidity_title" />
+            android:layout_marginLeft="0dp" />
 
         <TextView
             android:id="@+id/card_windspeed_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/windspeed"
-            app:layout_constraintLeft_toRightOf="@+id/card_humidity_text"
+            app:layout_constraintLeft_toRightOf="@+id/card_humidity"
             android:layout_marginLeft="8dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/card_humidity_text" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/card_humidity_title" />
 
         <TextView
             android:id="@+id/card_windspeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/card_windspeed_title"
             app:layout_constraintLeft_toRightOf="@+id/card_windspeed_title"
-            android:layout_marginLeft="0dp" />
+            android:layout_marginLeft="0dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/card_windspeed_title" />
 
         <TextView
             android:id="@+id/card_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/moscow"
+            app:layout_constraintLeft_toRightOf="@+id/card_image"
+            android:layout_marginLeft="8dp"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp"
-            app:layout_constraintRight_toRightOf="parent" />
+            android:layout_marginTop="0dp" />
+
+        <TextView
+            android:id="@+id/card_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/card_city"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/card_city" />
 
     </android.support.constraint.ConstraintLayout>
 

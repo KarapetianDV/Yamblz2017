@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,9 +42,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         loadWeatherIcon(parentContext, forecastDayList.get(position).getIconUrl(), holder.cardImage);
+        holder.cardDay.setText(formatDate(forecastDayList.get(position).getDate().getEpoch()));
         holder.cardTemp.setText(forecastDayList.get(position).getHigh().getCelsius());
         holder.cardWeather.setText(forecastDayList.get(position).getConditions());
-        holder.cardFeelsLike.setText(forecastDayList.get(position).getHigh().getCelsius());
         holder.cardHumidity.setText(forecastDayList.get(position).getAvehumidity().toString());
         holder.cardWindspeed.setText(forecastDayList.get(position).getAvewind().getKph().toString());
     }
@@ -52,12 +54,18 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         return forecastDayList.size();
     }
 
-    public void loadWeatherIcon(Context context, String iconUrl, ImageView cardImage) {
+    private void loadWeatherIcon(Context context, String iconUrl, ImageView cardImage) {
         Picasso.with(context)
                 .load(iconUrl)
                 .into(cardImage);
     }
 
+    private String formatDate(String epoch) {
+        Date date = new Date(Long.valueOf(epoch) * 1000);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
+
+        return dateFormat.format(date);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -70,14 +78,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         @BindView(R.id.card_weather)
         TextView cardWeather;
 
-        @BindView(R.id.card_feelslike_temp)
-        TextView cardFeelsLike;
-
-        @BindView(R.id.card_humidity_text)
+        @BindView(R.id.card_humidity)
         TextView cardHumidity;
 
         @BindView(R.id.card_windspeed)
         TextView cardWindspeed;
+
+        @BindView(R.id.card_day)
+        TextView cardDay;
 
         public ViewHolder(View itemView) {
             super(itemView);
