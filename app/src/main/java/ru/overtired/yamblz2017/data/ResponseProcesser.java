@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -62,12 +61,8 @@ public class ResponseProcesser {
                 .get("local_time_rfc822")
                 .getAsString();
 
-        try {
-            weather.date = new SimpleDateFormat(Weather.DATE_FORMAT, Locale.ENGLISH)
-                    .parse(dateText);
-        }catch (ParseException e){
-            return null;
-        }
+        weather.date = new SimpleDateFormat(Weather.DATE_FORMAT, Locale.ENGLISH)
+                    .format(dateText);
 
         return weather;
     }

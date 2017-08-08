@@ -60,7 +60,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
                 .into(cardImage);
     }
 
-    private String formatDate(String epoch) {
+    public static String formatDate(String epoch) {
         Date date = new Date(Long.valueOf(epoch) * 1000);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
 

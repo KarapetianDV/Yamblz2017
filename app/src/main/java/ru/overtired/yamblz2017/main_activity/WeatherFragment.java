@@ -26,6 +26,7 @@ import butterknife.Unbinder;
 import ru.overtired.yamblz2017.ForecastAdapter;
 import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.data.Weather;
+import ru.overtired.yamblz2017.data.database.Dao;
 import ru.overtired.yamblz2017.data.forecastApi.ForecastDay;
 import ru.overtired.yamblz2017.service.WeatherService;
 
@@ -78,7 +79,7 @@ public class WeatherFragment extends Fragment implements WeatherView{
         presenter = holder.getPresenter();
         if(presenter==null){
             presenter = new WeatherPresenterImpl(this,
-                    new WeatherModelImpl(getActivity().getApplicationContext()));
+                    new WeatherModelImpl(getActivity().getApplicationContext()), Dao.get(getActivity()));
             holder.setPresenter(presenter);
         }else{
             presenter.setView(this);

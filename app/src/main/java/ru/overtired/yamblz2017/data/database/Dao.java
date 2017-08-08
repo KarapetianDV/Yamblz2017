@@ -3,9 +3,12 @@ package ru.overtired.yamblz2017.data.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import ru.overtired.yamblz2017.App;
 import ru.overtired.yamblz2017.data.Weather;
@@ -15,6 +18,8 @@ import ru.overtired.yamblz2017.data.Weather;
  */
 
 public class Dao {
+    private static final String TAG = Dao.class.getSimpleName();
+    private static final int FORECAST_ITEMS = 10;
     private Context context;
 
     @NonNull
@@ -40,7 +45,7 @@ public class Dao {
 
         ContentValues contentValues = getWeatherContentValues(weather);
 
-        database.insert(DatabaseScheme.WeatherTable.NAME, null, contentValues);
+        new DatabaseTask().execute(database, contentValues);
     }
 
     @Nullable
@@ -55,8 +60,8 @@ public class Dao {
                 null,
                 DatabaseScheme.WeatherTable.Cols.DATE
         );
+        Log.d(TAG, "getLastWeather: " + DatabaseUtils.dumpCursorToString(cursor));
         WeatherCursorWrapper cursorWrapper = new WeatherCursorWrapper(cursor);
-
 
         if (cursorWrapper.getCount() == 0) {
             cursorWrapper.close();
@@ -85,9 +90,51 @@ public class Dao {
         contentValues.put(DatabaseScheme.WeatherTable.Cols.ICON_URL, weather.imageUrl);
         contentValues.put(DatabaseScheme.WeatherTable.Cols.WEATHER, weather.weather);
 
-        contentValues.put(DatabaseScheme.WeatherTable.Cols.DATE, weather.date.getTime());
+        contentValues.put(DatabaseScheme.WeatherTable.Cols.DATE, weather.date);
         contentValues.put(DatabaseScheme.WeatherTable.Cols.LANG,weather.lang);
 
         return contentValues;
+    }
+
+    private class DatabaseTask extends AsyncTask<Object, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            SQLiteDatabase database = (SQLiteDatabase) params[0];
+            ContentValues contentValues = (ContentValues) params[1];
+            Cursor cursor = database.query(
+                    DatabaseScheme.WeatherTable.NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            boolean isEmpty = cursor.getCount() < FORECAST_ITEMS;
+
+            Log.d(TAG, "doInBackground: " + cursor.getCount());
+            Log.d(TAG, "doInBackground: " + contentValues.size());
+
+            Log.d(TAG, "doInBackground: " + isEmpty);
+
+            if(isEmpty) {
+                database.insert(
+                        DatabaseScheme.WeatherTable.NAME,
+                        null,
+                        contentValues
+                );
+            } else {
+                database.update(
+                        DatabaseScheme.WeatherTable.NAME,
+                        contentValues,
+                        "date = ?",
+                        new String[]{contentValues.getAsString(DatabaseScheme.WeatherTable.Cols.DATE)}
+                );
+            }
+
+            return null;
+        }
     }
 }

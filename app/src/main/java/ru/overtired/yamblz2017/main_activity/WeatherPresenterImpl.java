@@ -1,5 +1,7 @@
 package ru.overtired.yamblz2017.main_activity;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.List;
@@ -11,8 +13,11 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.overtired.yamblz2017.App;
+import ru.overtired.yamblz2017.ForecastAdapter;
+import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.data.ForecastRequest;
 import ru.overtired.yamblz2017.data.Weather;
+import ru.overtired.yamblz2017.data.database.Dao;
 import ru.overtired.yamblz2017.data.forecastApi.ForecastApi;
 import ru.overtired.yamblz2017.data.forecastApi.ForecastDay;
 
@@ -25,13 +30,17 @@ public class WeatherPresenterImpl implements WeatherPresenter {
     private WeatherView view;
     private WeatherModel model;
     private CompositeDisposable compositeDisposable;
+    private Dao dao;
+    private SharedPreferences sharedPreferences;
 
-    public WeatherPresenterImpl(WeatherView view, WeatherModel model){
+    public WeatherPresenterImpl(WeatherView view, WeatherModel model, Dao dao){
         this.view = view;
         this.model = model;
+        this.dao = dao;
         model.setPresenter(this);
 
         compositeDisposable = new CompositeDisposable();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
     }
 
     @Override
@@ -80,7 +89,10 @@ public class WeatherPresenterImpl implements WeatherPresenter {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(ForecastRequest.class);
 
-        compositeDisposable.add(forecastRequest.getForecast(App.getApiWeather(), "ru", "Moscow")
+        compositeDisposable.add
+                (forecastRequest.getForecast(App.getApiWeather(),
+                App.getLanguage(),
+                sharedPreferences.getString(App.getContext().getString(R.string.pref_key_select_city), "Moscow"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onForecastLoaded, this::onForecastLoadingError));
@@ -89,6 +101,7 @@ public class WeatherPresenterImpl implements WeatherPresenter {
     @Override
     public void onForecastLoaded(ForecastApi forecastApi) {
         List<ForecastDay> forecastDays = forecastApi.getForecast().getSimpleforecast().getForecastday();
+        saveForecastCache(forecastDays);
         view.setRecyclerList(forecastDays);
         view.hideProgress();
     }
@@ -104,5 +117,30 @@ public class WeatherPresenterImpl implements WeatherPresenter {
     public void onDestroy() {
         this.view = null;
         compositeDisposable.clear();
+    }
+
+    private boolean saveForecastCache(List<ForecastDay> forecastDays) {
+        for (int i = 0; i < forecastDays.size(); i++) {
+            Weather w = new Weather();
+            w.city = sharedPreferences.getString(App.getContext().getString(R.string.pref_key_select_city),
+                    "Moscow");
+            w.tempCelsius = forecastDays.get(i).getHigh().getCelsius();
+            w.tempFarengate = forecastDays.get(i).getHigh().getFahrenheit();
+            w.feelsLikeCelsius = forecastDays.get(i).getHigh().getCelsius();
+            w.feelsLikeFarengate = forecastDays.get(i).getHigh().getFahrenheit();
+            w.humidity = forecastDays.get(i).getAvehumidity().toString();
+            w.windSpeedKph = forecastDays.get(i).getAvewind().getKph().toString();
+            w.windSpeedMph = forecastDays.get(i).getAvewind().getMph().toString();
+            w.dewPointCelsius = "";
+            w.dewPointFarengate = "";
+            w.imageUrl = forecastDays.get(i).getIconUrl();
+            w.weather = forecastDays.get(i).getConditions();
+            w.date = ForecastAdapter.formatDate(forecastDays.get(i).getDate().getEpoch());
+            w.lang = App.getLanguage();
+
+            dao.addWeather(w);
+        }
+
+        return true;
     }
 }
