@@ -1,6 +1,8 @@
 package ru.overtired.yamblz2017.main_activity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -15,12 +17,18 @@ import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.overtired.yamblz2017.R;
+import ru.overtired.yamblz2017.data.forecastApi.ForecastDay;
 import ru.overtired.yamblz2017.service.WeatherRequestJob;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    @BindView(R.id.main_activity_toolbar) Toolbar toolbar;
-    @BindView(R.id.main_activity_drawer_layout) DrawerLayout drawer;
-    @BindView(R.id.main_activity_navigation_view) NavigationView navigationView;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainView {
+    @BindView(R.id.main_activity_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.main_activity_drawer_layout)
+    DrawerLayout drawer;
+    @BindView(R.id.main_activity_navigation_view)
+    NavigationView navigationView;
+
+    private static boolean isTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +46,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_activity_fragment_container, WeatherFragment.newInstance(), WeatherFragment.TAG)
+                    .add(R.id.main_activity_fragment_container, WeatherFragment.newInstance(this), WeatherFragment.TAG)
                     .commit();
 
             navigationView.getMenu().getItem(0).setChecked(true);
@@ -48,22 +56,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String firstStartKey = getString(R.string.pref_key_first_start);
-        boolean isFirstStart = preferences.getBoolean(firstStartKey,true);
+        boolean isFirstStart = preferences.getBoolean(firstStartKey, true);
 
-        if(isFirstStart){
-            preferences.edit().putBoolean(firstStartKey,false).apply();
+        if (isFirstStart) {
+            preferences.edit().putBoolean(firstStartKey, false).apply();
 
-            boolean autoupdate = preferences.getBoolean(getString(R.string.pref_key_autoupdate),true);
+            boolean autoupdate = preferences.getBoolean(getString(R.string.pref_key_autoupdate), true);
 
-            if(autoupdate){
+            if (autoupdate) {
                 long period = Long.parseLong(preferences
                         .getString(getString(R.string.pref_key_autoupdate_interval),
                                 getString(R.string.interval_default)));
                 WeatherRequestJob.scheduleJob(period);
-            }else {
+            } else {
                 WeatherRequestJob.unscheduleJob();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isTablet = isTablet(this);
     }
 
     @Override
@@ -83,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.main_activity_nav_content:
                 WeatherFragment weatherFragment = (WeatherFragment) getSupportFragmentManager()
                         .findFragmentByTag(WeatherFragment.TAG);
-                if(weatherFragment == null){
-                    weatherFragment = WeatherFragment.newInstance();
+                if (weatherFragment == null) {
+                    weatherFragment = WeatherFragment.newInstance(this);
                 }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_activity_fragment_container, weatherFragment, WeatherFragment.TAG)
@@ -94,26 +108,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.main_activity_nav_settings:
                 PreferenceFragment preferenceFragment = (PreferenceFragment) getSupportFragmentManager()
                         .findFragmentByTag(PreferenceFragment.TAG);
-                if(preferenceFragment == null){
+                if (preferenceFragment == null) {
                     preferenceFragment = new PreferenceFragment();
                 }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_activity_fragment_container, preferenceFragment,PreferenceFragment.TAG)
+                        .replace(R.id.main_activity_fragment_container, preferenceFragment, PreferenceFragment.TAG)
                         .commit();
                 break;
         }
 
-        if(id==R.id.main_activity_nav_about){
+        if (id == R.id.main_activity_nav_about) {
             AboutFragment aboutFragment = (AboutFragment) getSupportFragmentManager()
                     .findFragmentByTag(AboutFragment.TAG);
-            if(aboutFragment ==null){
+            if (aboutFragment == null) {
                 aboutFragment = AboutFragment.newInstance();
             }
-            aboutFragment.show(getSupportFragmentManager(),AboutFragment.TAG);
+            aboutFragment.show(getSupportFragmentManager(), AboutFragment.TAG);
         }
 
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    public boolean isTablet(Context context) {
+        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return (xlarge || large);
+    }
+
+    public void addDetailFragment(ForecastDay forecastDay) {
     }
 }

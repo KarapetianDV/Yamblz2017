@@ -1,5 +1,7 @@
 package ru.overtired.yamblz2017.data.database;
 
+import android.provider.BaseColumns;
+
 /**
  * Created by overtired on 15.07.17.
  */
@@ -26,5 +28,12 @@ public class DatabaseScheme {
             public static final String ICON_URL = "icon_url";
             public static final String DATE = "date";
         }
+    }
+
+    public static final class CityTable implements BaseColumns {
+        public static final String NAME = "city_table";
+
+        public static final String ID = BaseColumns._ID;
+        public static final String COLUMN_NAME = "name";
     }
 }

@@ -2,8 +2,6 @@ package ru.overtired.yamblz2017.data;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 /**
  * Created by overtired on 14.07.17.
  */
@@ -13,33 +11,33 @@ public class Weather {
 
     public String city;
     public String lang;
-    public Date date;
+    public String date;
 
     @SerializedName("weather")
     public String weather;
 
     @SerializedName("temp_c")
-    public double tempCelsius;
+    public String tempCelsius;
     @SerializedName("temp_f")
-    public double tempFarengate;
+    public String tempFarengate;
 
     @SerializedName("feelslike_c")
-    public double feelsLikeCelsius;
+    public String feelsLikeCelsius;
     @SerializedName("feelslike_f")
-    public double feelsLikeFarengate;
+    public String feelsLikeFarengate;
 
     @SerializedName("relative_humidity")
     public String humidity;
 
     @SerializedName("wind_kph")
-    public double windSpeedKph;
+    public String windSpeedKph;
     @SerializedName("wind_mph")
-    public double windSpeedMph;
+    public String windSpeedMph;
 
     @SerializedName("dewpoint_c")
-    public double dewPointCelsius;
+    public String dewPointCelsius;
     @SerializedName("dewpoint_f")
-    public double dewPointFarengate;
+    public String dewPointFarengate;
 
     @SerializedName("icon_url")
     public String imageUrl;

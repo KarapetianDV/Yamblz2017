@@ -30,4 +30,10 @@
     <string name="windspeed">"Wind speed "</string>
     <string name="kph">kph</string>
     <string name="no_internet_error">Couldn\'t connect to server</string>
+
+    <string name="celsius" translatable="false">°C</string>
+    <string name="temp_day">Temperature in the afternoon</string>
+    <string name="temp_night">Temperature at night</string>
+    <string name="detail_description_placeholder">Weather description</string>
+    <string name="select_city_text">Select city</string>
 </resources>

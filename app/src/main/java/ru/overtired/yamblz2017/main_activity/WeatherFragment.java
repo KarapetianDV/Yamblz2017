@@ -10,6 +10,9 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +22,23 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import ru.overtired.yamblz2017.ForecastAdapter;
 import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.data.Weather;
+import ru.overtired.yamblz2017.data.database.Dao;
+import ru.overtired.yamblz2017.data.forecastApi.ForecastDay;
 import ru.overtired.yamblz2017.service.WeatherService;
 
 /**
  * Created by overtired on 09.07.17.
  */
 
-public class WeatherFragment extends Fragment implements  WeatherView{
+public class WeatherFragment extends Fragment implements WeatherView{
     public static final String TAG = "WeatherFragment";
 
     WeatherPresenter presenter;
@@ -42,34 +47,43 @@ public class WeatherFragment extends Fragment implements  WeatherView{
 
     private SharedPreferences sharedPreferences;
 
-    @BindView(R.id.card_time)
-    TextView cardTime;
-    @BindView(R.id.card_image)
-    ImageView cardImage;
-    @BindView(R.id.card_temp)
-    TextView cardTemp;
-    @BindView(R.id.card_feelslike_temp)
-    TextView cardFeelsTemp;
-    @BindView(R.id.card_humidity)
-    TextView cardHumidity;
-    @BindView(R.id.card_windspeed)
-    TextView cardWindSpeed;
-    @BindView(R.id.card_weather)
-    TextView cardWeather;
-    @BindView(R.id.card_city)
-    TextView cardCity;
-
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
+
+    @BindView(R.id.forecast_recyclerview)
+    @Nullable RecyclerView forecastRecyclerView;
+
+    @BindView(R.id.detailsIconImageView)
+    @Nullable ImageView detailsIconImageView;
+
+    @BindView(R.id.conditionText)
+    @Nullable TextView conditionText;
+
+    @BindView(R.id.tempHigh)
+    @Nullable TextView tempHigh;
+
+    @BindView(R.id.tempMin)
+    @Nullable TextView tempMin;
+
+    @BindView(R.id.details_wind)
+    @Nullable TextView wind;
+
+    @BindView(R.id.details_humidity)
+    @Nullable TextView humidity;
+
+    private static MainView mainActivity;
+
+    private ForecastAdapter adapter;
 
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            presenter.onUpdateWeather();
+            presenter.loadForecast();
         }
     };
 
-    public static WeatherFragment newInstance() {
+    public static WeatherFragment newInstance(MainView mainView) {
+        mainActivity = mainView;
         return new WeatherFragment();
     }
 
@@ -90,7 +104,7 @@ public class WeatherFragment extends Fragment implements  WeatherView{
         presenter = holder.getPresenter();
         if(presenter==null){
             presenter = new WeatherPresenterImpl(this,
-                    new WeatherModelImpl(getActivity().getApplicationContext()));
+                    new WeatherModelImpl(getActivity().getApplicationContext()), Dao.get(getActivity()), mainActivity);
             holder.setPresenter(presenter);
         }else{
             presenter.setView(this);
@@ -121,15 +135,19 @@ public class WeatherFragment extends Fragment implements  WeatherView{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_activity_weather, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        View view;
+        view = inflater.inflate(R.layout.main_activity_weather, container, false);
+        ButterKnife.bind(this, view);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.onRefreshWeather();
+                presenter.loadForecast();
             }
         });
+
+        forecastRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        presenter.loadForecast();
 
         return view;
     }
@@ -137,23 +155,12 @@ public class WeatherFragment extends Fragment implements  WeatherView{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+//        unbinder.unbind();
     }
 
     @Override
     public void setWeather(Weather weather) {
-        Picasso.with(getActivity().getApplicationContext())
-                .load(weather.imageUrl).into(cardImage);
-        cardTemp.setText(Double.toString(weather.tempCelsius)+"°C ");
-        cardFeelsTemp.setText(Double.toString(weather.feelsLikeCelsius)+"°C ");
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-        cardTime.setText(format.format(weather.date));
-        cardHumidity.setText(weather.humidity);
-        cardWindSpeed.setText(weather.windSpeedKph+" "+getString(R.string.kph));
-        cardWeather.setText(weather.weather);
-        cardCity.setText(
-                sharedPreferences.getString(getString(R.string.pref_key_select_city),
-                getString(R.string.moscow)));
+        // Empty method
     }
 
     @Override
@@ -168,5 +175,27 @@ public class WeatherFragment extends Fragment implements  WeatherView{
             case INTERNET_ERROR: text = getString(R.string.no_internet_error);
         }
         Toast.makeText(getActivity(),text,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setRecyclerList(List<ForecastDay> forecastDays) {
+        Log.d(TAG, "setRecyclerList: " + forecastDays);
+        adapter = new ForecastAdapter(presenter, forecastDays);
+        forecastRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void RecyclerOnClickListener(ForecastDay forecastDay) {
+        if (detailsIconImageView != null) {
+            Picasso.with(getActivity())
+                    .load(forecastDay.getIconUrl())
+                    .into(detailsIconImageView);
+
+            conditionText.setText(forecastDay.getConditions());
+            tempHigh.setText(getString(R.string.temp_day) + " " + forecastDay.getHigh().getCelsius() + getString(R.string.celsius));
+            tempMin.setText(getString(R.string.temp_night) + " " + forecastDay.getLow().getCelsius() + getString(R.string.celsius));
+            humidity.setText(getString(R.string.humidity) + " " + forecastDay.getAvehumidity() + "%");
+            wind.setText(getString(R.string.windspeed) + " " + forecastDay.getAvewind().getKph() + getString(R.string.kph));
+        }
     }
 }

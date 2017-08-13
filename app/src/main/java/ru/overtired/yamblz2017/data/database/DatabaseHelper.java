@@ -31,6 +31,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 DatabaseScheme.WeatherTable.Cols.DEW_POINT_F + "," +
                 DatabaseScheme.WeatherTable.Cols.ICON_URL + "," +
                 DatabaseScheme.WeatherTable.Cols.DATE + ")");
+
+        db.execSQL("CREATE TABLE " + DatabaseScheme.CityTable.NAME + " ("
+        + DatabaseScheme.CityTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+        + DatabaseScheme.CityTable.NAME + " TEXT NOT NULL);");
     }
 
     @Override

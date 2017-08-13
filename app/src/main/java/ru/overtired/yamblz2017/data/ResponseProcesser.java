@@ -8,20 +8,20 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import ru.overtired.yamblz2017.App;
 
 /**
  * Created by overtired on 15.07.17.
  */
 
 public class ResponseProcesser {
-    private static final String API_WEATHER = "7e79982c03e614a8";
+
 
     @Nullable
     public static Weather requestWeather(@NonNull String lang, @NonNull String city) {
@@ -34,7 +34,7 @@ public class ResponseProcesser {
 
         String jsonResponse;
         try {
-             jsonResponse = fetcher.getWheather(API_WEATHER, lang, city)
+             jsonResponse = fetcher.getWheather(App.getApiWeather(), lang, city)
                     .execute()
                     .body();
         }catch (IOException e){
@@ -61,12 +61,8 @@ public class ResponseProcesser {
                 .get("local_time_rfc822")
                 .getAsString();
 
-        try {
-            weather.date = new SimpleDateFormat(Weather.DATE_FORMAT, Locale.ENGLISH)
-                    .parse(dateText);
-        }catch (ParseException e){
-            return null;
-        }
+        weather.date = new SimpleDateFormat(Weather.DATE_FORMAT, Locale.ENGLISH)
+                    .format(dateText);
 
         return weather;
     }

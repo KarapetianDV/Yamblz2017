@@ -1,0 +1,67 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/detailsIconImageView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:id="@+id/conditionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/detail_description_placeholder"
+        app:layout_constraintLeft_toRightOf="@+id/detailsIconImageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tempHigh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/temp_day"
+        app:layout_constraintLeft_toRightOf="@+id/detailsIconImageView"
+        app:layout_constraintTop_toBottomOf="@+id/conditionText" />
+
+    <TextView
+        android:id="@+id/tempMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/temp_night"
+        app:layout_constraintLeft_toRightOf="@+id/detailsIconImageView"
+        app:layout_constraintTop_toBottomOf="@+id/tempHigh" />
+
+    <TextView
+        android:id="@+id/details_wind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/windspeed"
+        app:layout_constraintLeft_toRightOf="@+id/detailsIconImageView"
+        app:layout_constraintTop_toBottomOf="@+id/tempMin" />
+
+    <TextView
+        android:id="@+id/details_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/humidity"
+        app:layout_constraintLeft_toRightOf="@+id/detailsIconImageView"
+        app:layout_constraintTop_toBottomOf="@+id/details_wind" />
+
+</android.support.constraint.ConstraintLayout>
