@@ -96,6 +96,40 @@ public class Dao {
         return contentValues;
     }
 
+    public boolean putCityInDatabase(String city) {
+        Log.d(TAG, "putCityInDatabase: " + city);
+        ContentValues cityContentValue = new ContentValues();
+        cityContentValue.put(DatabaseScheme.CityTable.COLUMN_NAME, city);
+
+        Log.d(TAG, "putCityInDatabase: " + cityContentValue);
+
+        SQLiteDatabase db = new DatabaseHelper(context).getWritableDatabase();
+
+        long isInserted = db.insert(
+                DatabaseScheme.CityTable.NAME,
+                null,
+                cityContentValue
+        );
+
+        Log.d(TAG, "putCityInDatabase: " + isInserted);
+
+        return false;
+    }
+
+    public Cursor getCities() {
+        SQLiteDatabase db = new DatabaseHelper(context).getWritableDatabase();
+
+        return db.query(
+                DatabaseScheme.CityTable.NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
     private class DatabaseTask extends AsyncTask<Object, Void, Void> {
 
         @Override

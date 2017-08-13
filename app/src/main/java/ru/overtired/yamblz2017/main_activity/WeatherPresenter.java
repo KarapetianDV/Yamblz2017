@@ -17,4 +17,5 @@ public interface WeatherPresenter {
     void loadForecast();
     void onForecastLoaded(ForecastApi forecastApi);
     void onForecastLoadingError(Throwable t);
+    void onClickInRecyclerView(int position);
 }

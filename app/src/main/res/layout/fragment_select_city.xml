@@ -5,8 +5,20 @@
     android:orientation="vertical"
     tools:context="ru.overtired.yamblz2017.main_activity.SelectCityFragment">
 
+    <ImageView
+        android:layout_margin="8dp"
+        android:src="@drawable/yandex_logo"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+
+    <ListView
+        android:id="@+id/saved_cities_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
     <EditText
         android:maxLines="1"
+        android:hint="@string/select_city_text"
         android:id="@+id/enter_city_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

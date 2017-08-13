@@ -20,9 +20,9 @@ public class WeatherPresenterImplTest {
 
     @Before
     public void setUp() {
-        weatherModel = mock(WeatherModelImpl.class);
-        weatherFragment = WeatherFragment.newInstance();
-        weatherPresenterImpl = new WeatherPresenterImpl(weatherFragment, weatherModel);
+//        weatherModel = mock(WeatherModelImpl.class);
+//        weatherFragment = WeatherFragment.newInstance();
+//        weatherPresenterImpl = new WeatherPresenterImpl(weatherFragment, weatherModel);
         weather = mock(Weather.class);
     }
 

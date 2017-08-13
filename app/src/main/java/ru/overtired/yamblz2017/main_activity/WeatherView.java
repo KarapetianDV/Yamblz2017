@@ -16,4 +16,5 @@ public interface WeatherView {
     void hideProgress();
     void showMessage(MESSAGE message);
     void setRecyclerList(List<ForecastDay> forecastDays);
+    void RecyclerOnClickListener(ForecastDay forecastDay);
 }

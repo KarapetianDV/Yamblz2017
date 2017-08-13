@@ -17,26 +17,30 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.overtired.yamblz2017.data.forecastApi.ForecastDay;
+import ru.overtired.yamblz2017.main_activity.WeatherPresenter;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder> {
 
+    private WeatherPresenter presenter;
     Context parentContext;
 
     private List<ForecastDay> forecastDayList;
 
-    public ForecastAdapter() {
-    }
-
-    public ForecastAdapter(List<ForecastDay> forecastDayList) {
+    public ForecastAdapter(WeatherPresenter presenter, List<ForecastDay> forecastDayList) {
+        this.presenter = presenter;
         this.forecastDayList = forecastDayList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card, parent, false);
         parentContext = parent.getContext();
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.itemView.setOnClickListener(v -> {
+            presenter.onClickInRecyclerView(viewHolder.getAdapterPosition());
+        });
 
-        return new ViewHolder(v);
+        return viewHolder;
     }
 
     @Override
@@ -89,6 +93,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
+
             ButterKnife.bind(this, itemView);
         }
     }

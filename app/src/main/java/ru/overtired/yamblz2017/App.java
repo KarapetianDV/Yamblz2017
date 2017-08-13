@@ -31,6 +31,9 @@ public class App extends Application {
         super.onCreate();
         JobManager.create(this).addJobCreator(new WeatherJobCreator());
 
+        Dao dao = Dao.get(getApplicationContext());
+
+        dao.putCityInDatabase("Moscow");
 
         Stetho.initializeWithDefaults(this);
 

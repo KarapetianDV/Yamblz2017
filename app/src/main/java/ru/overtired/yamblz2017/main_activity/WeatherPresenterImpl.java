@@ -32,11 +32,14 @@ public class WeatherPresenterImpl implements WeatherPresenter {
     private CompositeDisposable compositeDisposable;
     private Dao dao;
     private SharedPreferences sharedPreferences;
+    private List<ForecastDay> forecastList;
+    private MainView mainView;
 
-    public WeatherPresenterImpl(WeatherView view, WeatherModel model, Dao dao){
+    public WeatherPresenterImpl(WeatherView view, WeatherModel model, Dao dao, MainView mainView){
         this.view = view;
         this.model = model;
         this.dao = dao;
+        this.mainView = mainView;
         model.setPresenter(this);
 
         compositeDisposable = new CompositeDisposable();
@@ -101,6 +104,7 @@ public class WeatherPresenterImpl implements WeatherPresenter {
     @Override
     public void onForecastLoaded(ForecastApi forecastApi) {
         List<ForecastDay> forecastDays = forecastApi.getForecast().getSimpleforecast().getForecastday();
+        this.forecastList = forecastDays;
         saveForecastCache(forecastDays);
         view.setRecyclerList(forecastDays);
         view.hideProgress();
@@ -142,5 +146,10 @@ public class WeatherPresenterImpl implements WeatherPresenter {
         }
 
         return true;
+    }
+
+    @Override
+    public void onClickInRecyclerView(int position) {
+        view.RecyclerOnClickListener(forecastList.get(position));
     }
 }

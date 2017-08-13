@@ -16,7 +16,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -47,9 +51,29 @@ public class WeatherFragment extends Fragment implements WeatherView{
     SwipeRefreshLayout refreshLayout;
 
     @BindView(R.id.forecast_recyclerview)
-    RecyclerView forecastRecyclerView;
+    @Nullable RecyclerView forecastRecyclerView;
 
-    ForecastAdapter adapter = new ForecastAdapter();
+    @BindView(R.id.detailsIconImageView)
+    @Nullable ImageView detailsIconImageView;
+
+    @BindView(R.id.conditionText)
+    @Nullable TextView conditionText;
+
+    @BindView(R.id.tempHigh)
+    @Nullable TextView tempHigh;
+
+    @BindView(R.id.tempMin)
+    @Nullable TextView tempMin;
+
+    @BindView(R.id.details_wind)
+    @Nullable TextView wind;
+
+    @BindView(R.id.details_humidity)
+    @Nullable TextView humidity;
+
+    private static MainView mainActivity;
+
+    private ForecastAdapter adapter;
 
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
@@ -58,7 +82,8 @@ public class WeatherFragment extends Fragment implements WeatherView{
         }
     };
 
-    public static WeatherFragment newInstance() {
+    public static WeatherFragment newInstance(MainView mainView) {
+        mainActivity = mainView;
         return new WeatherFragment();
     }
 
@@ -79,7 +104,7 @@ public class WeatherFragment extends Fragment implements WeatherView{
         presenter = holder.getPresenter();
         if(presenter==null){
             presenter = new WeatherPresenterImpl(this,
-                    new WeatherModelImpl(getActivity().getApplicationContext()), Dao.get(getActivity()));
+                    new WeatherModelImpl(getActivity().getApplicationContext()), Dao.get(getActivity()), mainActivity);
             holder.setPresenter(presenter);
         }else{
             presenter.setView(this);
@@ -110,8 +135,9 @@ public class WeatherFragment extends Fragment implements WeatherView{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_activity_weather, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        View view;
+        view = inflater.inflate(R.layout.main_activity_weather, container, false);
+        ButterKnife.bind(this, view);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -129,7 +155,7 @@ public class WeatherFragment extends Fragment implements WeatherView{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+//        unbinder.unbind();
     }
 
     @Override
@@ -154,7 +180,22 @@ public class WeatherFragment extends Fragment implements WeatherView{
     @Override
     public void setRecyclerList(List<ForecastDay> forecastDays) {
         Log.d(TAG, "setRecyclerList: " + forecastDays);
-        adapter = new ForecastAdapter(forecastDays);
+        adapter = new ForecastAdapter(presenter, forecastDays);
         forecastRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void RecyclerOnClickListener(ForecastDay forecastDay) {
+        if (detailsIconImageView != null) {
+            Picasso.with(getActivity())
+                    .load(forecastDay.getIconUrl())
+                    .into(detailsIconImageView);
+
+            conditionText.setText(forecastDay.getConditions());
+            tempHigh.setText(getString(R.string.temp_day) + " " + forecastDay.getHigh().getCelsius() + getString(R.string.celsius));
+            tempMin.setText(getString(R.string.temp_night) + " " + forecastDay.getLow().getCelsius() + getString(R.string.celsius));
+            humidity.setText(getString(R.string.humidity) + " " + forecastDay.getAvehumidity() + "%");
+            wind.setText(getString(R.string.windspeed) + " " + forecastDay.getAvewind().getKph() + getString(R.string.kph));
+        }
     }
 }

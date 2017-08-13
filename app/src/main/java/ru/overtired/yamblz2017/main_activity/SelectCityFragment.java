@@ -28,10 +28,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.overtired.yamblz2017.R;
 import ru.overtired.yamblz2017.data.AutoComplete;
-import ru.overtired.yamblz2017.data.Result;
 import ru.overtired.yamblz2017.data.ResponseProcesser;
+import ru.overtired.yamblz2017.data.Result;
+import ru.overtired.yamblz2017.data.database.Dao;
 
 public class SelectCityFragment extends DialogFragment {
+
+    @BindView(R.id.saved_cities_list)
+    ListView savedCitiesList;
 
     @BindView(R.id.enter_city_edittext)
     EditText cityEditText;
@@ -101,11 +105,15 @@ public class SelectCityFragment extends DialogFragment {
 
         suggestionsListView.setOnItemClickListener((parent, view, position, id) -> {
             final String location = ((TextView) view).getText().toString().split(",")[0];
-            sharedPreferences.edit()
-                    .putString(getString(R.string.pref_key_select_city), location)
-                    .apply();
+            Dao dao = Dao.get(getActivity());
+            dao.putCityInDatabase(location);
+//            sharedPreferences.edit()
+//                    .putString(getString(R.string.pref_key_select_city), location)
+//                    .apply();
             cityEditText.setText(location);
             dialog.dismiss();
         });
+
+
     }
 }
